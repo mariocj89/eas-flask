@@ -8,3 +8,5 @@ venv/bin/activate: requirements.txt
 test: venv
 	venv/bin/python -m pytest tests
 
+run: venv
+	venv/bin/python ./run.py
