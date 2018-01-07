@@ -10,5 +10,5 @@ from . import models
 from . import api
 
 db.create_all()
-app.register_blueprint(api.blueprint, url_prefix="/api/v1")
+app.register_blueprint(api.bp, url_prefix="/api/v1")
 

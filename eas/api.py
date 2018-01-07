@@ -2,7 +2,7 @@ from flask import request, Blueprint, jsonify
 
 from . import models, schemas
 
-blueprint = Blueprint("api", __name__)
+bp = Blueprint("api", __name__)
 
 
 def resource_create(model_class, serializer):
@@ -12,6 +12,6 @@ def resource_create(model_class, serializer):
     return jsonify(output_data)
 
 
-@blueprint.route("/random_number")
+@bp.route("/random_number")
 def post():
     return resource_create(models.RandomNumber, schemas.RandomNumber())
