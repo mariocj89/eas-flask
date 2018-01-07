@@ -14,7 +14,7 @@ _MODELS = {
 }
 
 
-@bp.route("/<string:draw_type>", methods=["POST"])
+@bp.route("/<string:draw_type>/", methods=["POST"])
 def post(draw_type):
     serializer = _SCHEMAS[draw_type]()
     model_class = _MODELS[draw_type]
@@ -25,7 +25,7 @@ def post(draw_type):
     return jsonify(output_data)
 
 
-@bp.route("/<string:draw_type>/<string:id_>", methods=["GET"])
+@bp.route("/<string:draw_type>/<string:id_>/", methods=["GET"])
 def get(draw_type, id_):
     serializer = _SCHEMAS[draw_type]()
     model_class = _MODELS[draw_type]

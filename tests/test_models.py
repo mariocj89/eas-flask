@@ -3,21 +3,17 @@ import pytest
 import sqlalchemy.exc
 
 from eas import models
-from eas import db
+from eas import db, app
 
 
 @pytest.fixture(autouse=True)
 def clean_db():
     """Ensure the db is created and in a clean state"""
-    # TODO: add a check that we are hitting in memory sqlite?
+    assert app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///:memory:'
     db.create_all()
     yield
     db.session.commit()  # Commit time constraints to be validated
-
-    models_to_delete = [models.RandomNumber]
-    for m in models_to_delete:
-        m.query.delete()
-    db.session.commit()
+    db.drop_all()
 
 
 def test_random_number_create_defaults():
