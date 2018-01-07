@@ -5,6 +5,8 @@ import datetime as dt
 import sqlalchemy
 
 from . import db
+from sqlalchemy import Column
+from sqlalchemy.types import Integer, String, TIMESTAMP, Unicode
 
 
 def _positive_number(field_name):
@@ -36,12 +38,12 @@ class DrawBaseModel(db.Model):
 
     __abstract__ = True
 
-    id = db.Column(db.String(32), primary_key=True,
-                   default=lambda: uuid.uuid4().hex)
-    created = db.Column(db.TIMESTAMP(timezone=True), unique=True, nullable=False,
-                        default=lambda: dt.datetime.now(dt.timezone.utc))
-    title = db.Column(db.Unicode, nullable=True)
-    description = db.Column(db.Unicode, nullable=True)
+    id = Column(String(32), primary_key=True,
+                default=lambda: uuid.uuid4().hex)
+    created = Column(TIMESTAMP(timezone=True), unique=True, nullable=False,
+                     default=lambda: dt.datetime.now(dt.timezone.utc))
+    title = Column(Unicode, nullable=True)
+    description = Column(Unicode, nullable=True)
 
     @classmethod
     def fields(cls):
@@ -67,10 +69,10 @@ class RandomNumber(DrawBaseModel, SQLFactory):
     DEFAULT_MIN = 1
     DEFAULT_MAX = 10
 
-    range_min = db.Column(db.Integer, nullable=False,
-                          default=DEFAULT_MIN)
-    range_max = db.Column(db.Integer, nullable=False,
-                          default=DEFAULT_MAX)
+    range_min = Column(Integer, nullable=False,
+                       default=DEFAULT_MIN)
+    range_max = Column(Integer, nullable=False,
+                       default=DEFAULT_MAX)
     __table_args__ = (
         _positive_number("range_min"),
         _positive_number("range_max"),
