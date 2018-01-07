@@ -1,0 +1,11 @@
+language: python
+sudo: false
+python:
+      - "3.6"
+install:
+    - "pip install -r requirements.txt"
+    - "pip install coveralls pytest-cov"
+script:
+    - "python -m pytest tests --cov=eas"
+after_success:
+    - coveralls
