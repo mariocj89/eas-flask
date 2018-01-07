@@ -3,10 +3,11 @@ import uuid
 import datetime as dt
 
 import sqlalchemy
-
-from . import db
 from sqlalchemy import Column
 from sqlalchemy.types import Integer, String, TIMESTAMP, Unicode
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 def _positive_number(field_name):
@@ -66,6 +67,7 @@ class DrawBaseModel(db.Model):
 
 
 class RandomNumber(DrawBaseModel, SQLFactory):
+    __tablename__ = 'random_number'
     DEFAULT_MIN = 1
     DEFAULT_MAX = 10
 

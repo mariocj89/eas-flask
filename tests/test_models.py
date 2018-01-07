@@ -2,18 +2,19 @@ import pytest
 
 import sqlalchemy.exc
 
-from eas import models
-from eas import db, app
+from eas import models, factories
 
 
 @pytest.fixture(autouse=True)
 def clean_db():
     """Ensure the db is created and in a clean state"""
-    assert app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///:memory:'
-    db.create_all()
-    yield
-    db.session.commit()  # Commit time constraints to be validated
-    db.drop_all()
+    # TODO: add a check that we are hitting in memory sqlite?
+    app = factories.create_app()
+    with app.app_context():
+        models.db.create_all()
+        yield
+        models.db.session.commit()  # Commit time constraints to be validated
+        models.db.drop_all()
 
 
 def test_random_number_create_defaults():
@@ -48,7 +49,7 @@ def test_random_number_create_with_custom_args():
 def test_random_number_invalid_config(values):
     with pytest.raises(sqlalchemy.exc.IntegrityError):
         models.RandomNumber.create(**values)
-    db.session.rollback()
+    models.db.session.rollback()
 
 
 def test_draw_field_description():
