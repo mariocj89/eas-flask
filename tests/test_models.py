@@ -52,6 +52,12 @@ def test_random_number_invalid_config(values):
     models.db.session.rollback()
 
 
+def test_draw_repr():
+    rn = models.RandomNumber.create()
+    assert rn.id in repr(rn)
+    assert rn.__class__.__name__ in repr(rn)
+
+
 def test_draw_field_description():
     desc = models.RandomNumber().fields()
     assert desc["id"]["optional"]

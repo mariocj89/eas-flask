@@ -8,5 +8,8 @@ venv/bin/activate: requirements.txt
 test: venv
 	venv/bin/python -m pytest tests
 
+coverage:
+	venv/bin/python -m pytest tests --cov=eas --cov-report=term-missing
+
 run: venv
 	venv/bin/python ./run.py

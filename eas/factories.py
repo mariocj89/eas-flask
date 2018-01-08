@@ -2,12 +2,10 @@ from flask import Flask
 from . import urls
 
 
-def create_app(config_override=None):
+def create_app():
     app = Flask('flaskr')
 
     app.config.from_pyfile('eas/config.py')
-    if config_override:
-        app.config.update(config_override)
 
     register_blueprints(app)
     register_cli(app)
@@ -22,7 +20,7 @@ def register_blueprints(app):
     app.register_blueprint(api.bp, url_prefix=urls.API_URL)
 
 
-def register_cli(app):
+def register_cli(app):  # pragma: nocover
     @app.cli.command('initdb')
     def initdb_command():
         """Creates the database tables."""
