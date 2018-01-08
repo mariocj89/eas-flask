@@ -13,7 +13,7 @@ db = SQLAlchemy()
 def _positive_number(field_name):
     return sqlalchemy.CheckConstraint(
         f'{field_name} > 0',
-        name=f"{field_name}_positive"
+        name=f"{field_name}_positive",
     )
 
 
