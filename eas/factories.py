@@ -34,4 +34,3 @@ def register_cli(app):
 def init_db(app):
     from eas.models import db
     db.init_app(app)
-    app.db = db
