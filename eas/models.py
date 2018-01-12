@@ -41,7 +41,9 @@ class DrawBaseModel(db.Model):
 
     id = Column(String(32), primary_key=True,
                 default=lambda: uuid.uuid4().hex)
-    created = Column(TIMESTAMP(timezone=True), unique=True, nullable=False,
+    private_id = Column(String(32), index=True,
+                        default=lambda: uuid.uuid4().hex)
+    created = Column(TIMESTAMP(timezone=True), unique=True, nullable=False, index=True,
                      default=lambda: dt.datetime.now(dt.timezone.utc))
     title = Column(Unicode, nullable=True)
     description = Column(Unicode, nullable=True)

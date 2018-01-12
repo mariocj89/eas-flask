@@ -22,6 +22,7 @@ def post(draw_type):
     input_data, _ = serializer.load(request.json)
     obj = model_class.create(**input_data)
     output_data, _ = serializer.dump(obj)
+    output_data["private_id"] = obj.private_id
     return jsonify(output_data)
 
 
@@ -32,5 +33,7 @@ def get(draw_type, id_):
 
     input_data, _ = serializer.load(request.json)
     obj = model_class.query.get(id_)
+    if not obj:  # Not found, try to search via private_id
+        obj = model_class.query.filter_by(private_id=id_).first_or_404()
     output_data, _ = serializer.dump(obj)
     return jsonify(output_data)

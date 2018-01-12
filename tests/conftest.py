@@ -11,7 +11,6 @@ def app():
     """Ensure the db is created and in a clean state"""
     # TODO: add a check that we are hitting in memory sqlite?
     app = factories.create_app()
-    client = app.test_client()
     with app.app_context():
         models.db.create_all()
         yield app
@@ -27,9 +26,11 @@ def api(app):
 
 
 class Response(flask.Response):
+    _SUCCESS_STATUS_CODES = range(200, 300)
+
     @property
     def json(self):
-        print(self.data)
+        assert self.status_code in self._SUCCESS_STATUS_CODES
         return json.loads(self.data)
 
 
