@@ -26,11 +26,8 @@ def api(app):
 
 
 class Response(flask.Response):
-    _SUCCESS_STATUS_CODES = range(200, 300)
-
     @property
     def json(self):
-        assert self.status_code in self._SUCCESS_STATUS_CODES
         return json.loads(self.data)
 
 
