@@ -14,6 +14,8 @@ def test_create_random_number_successfully():
 
 
 @pytest.mark.parametrize("values", [
+    dict(range_min=None),
+    dict(range_max=None),
     dict(range_min=-1),
     dict(range_max=-1),
     dict(range_min=15, range_max=10),

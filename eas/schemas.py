@@ -18,8 +18,8 @@ class DrawBaseSchema(Schema):
 
 
 class RandomNumber(DrawBaseSchema):
-    range_min = fields.Integer(validate=_positive, required=True, allow_none=False)
-    range_max = fields.Integer(validate=_positive, required=True, allow_none=False)
+    range_min = fields.Integer(validate=_positive, required=True)
+    range_max = fields.Integer(validate=_positive, required=True)
 
     @post_load
     def _make(self, data):

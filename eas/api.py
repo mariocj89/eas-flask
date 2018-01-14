@@ -42,7 +42,6 @@ def post(draw_type):
 
 
 @bp.route("/<string:draw_type>/<string:id_>/", methods=["GET"])
-@valid_or_400
 def get(draw_type, id_):
     serializer = _SCHEMAS[draw_type](exclude=["private_id"])
     model_class = _MODELS[draw_type]
@@ -52,3 +51,4 @@ def get(draw_type, id_):
         obj = model_class.query.filter_by(private_id=id_).first_or_404()
     output_data, _ = serializer.dump(obj)
     return jsonify(output_data)
+

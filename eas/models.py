@@ -3,7 +3,7 @@ import uuid
 import datetime as dt
 
 from sqlalchemy import Column
-from sqlalchemy.types import Integer, String, TIMESTAMP, Unicode
+from sqlalchemy.types import Integer, String, TIMESTAMP, Unicode, UnicodeText
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -23,7 +23,7 @@ class DrawBaseModel(db.Model):
     private_id = Column(String(32), index=True)
     created = Column(TIMESTAMP(timezone=True), unique=True, nullable=False, index=True)
     title = Column(Unicode, nullable=True)
-    description = Column(Unicode, nullable=True)
+    description = Column(UnicodeText, nullable=True)
 
     def __repr__(self):
         return "<%s %r>" % (self.__class__.__name__, self.id)
@@ -34,3 +34,4 @@ class RandomNumber(DrawBaseModel):
 
     range_min = Column(Integer, nullable=False)
     range_max = Column(Integer, nullable=False)
+
