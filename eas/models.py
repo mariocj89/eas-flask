@@ -9,23 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class SQLFactory:
-    """Mixing to add a method to create object on db
-
-    To be applied to a Model class
-    """
-    @classmethod
-    def create(cls, **kwargs):  # To be retired
-        """Creates an object and commits it
-
-        @PRE: There is no ongoing transaction or behaviour is undefined
-        """
-        obj = cls(**kwargs)
-        db.session.add(obj)
-        db.session.commit()
-        return obj
-
-
 class DrawBaseModel(db.Model):
     """The basic attributes and functionality for a draw"""
     __abstract__ = True
@@ -46,7 +29,7 @@ class DrawBaseModel(db.Model):
         return "<%s %r>" % (self.__class__.__name__, self.id)
 
 
-class RandomNumber(DrawBaseModel, SQLFactory):
+class RandomNumber(DrawBaseModel):
     __tablename__ = 'random_number'
 
     range_min = Column(Integer, nullable=False)

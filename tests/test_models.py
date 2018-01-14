@@ -11,13 +11,13 @@ def clean_db(app):
 
 
 def test_create_with_defaults():
-    rn = models.RandomNumber.create(**factories.SimpleNumber.dict())
+    rn = models.RandomNumber(**factories.SimpleNumber.dict())
     for f in ["id", "private_id", "created"]:
         assert getattr(rn, f) is not None
 
 
 def test_create_with_fields():
-    rn = models.RandomNumber.create(
+    rn = models.RandomNumber(
         **factories.PublicNumber.dict(title="sample_title")
     )
     assert rn.title == "sample_title"
