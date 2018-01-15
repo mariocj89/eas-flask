@@ -34,3 +34,22 @@ def test_draw_repr():
     assert rn.id in repr(rn)
     assert rn.__class__.__name__ in repr(rn)
 
+
+def test_update_draw_changes_last_updated():
+    rn = factories.SimpleNumber.create()
+    models.db.session.commit()
+    assert rn.created == rn.last_updated
+    rn.title = "New title"
+    models.db.session.commit()
+    assert rn.title == "New title"
+    assert rn.created != rn.last_updated
+
+
+def test_dates_have_timezones():
+    rn = factories.SimpleNumber.create()
+    models.db.session.commit()
+    assert rn.created.tzinfo
+    assert rn.last_updated.tzinfo
+    obj = models.RandomNumber.query.get(rn.id)
+    assert obj.created.tzinfo
+    assert obj.last_updated.tzinfo
