@@ -1,5 +1,3 @@
-import functools
-
 from flask import request, Blueprint, jsonify, g
 
 from . import models, schemas
@@ -16,19 +14,14 @@ _MODELS = {
 }
 
 
-def valid_or_400(func):
-    """If a ValidationError is returned, transforms it to a Bad Request response"""
-    @functools.wraps(func)
-    def _(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except schemas.ValidationError as errors:
-            return jsonify(errors.messages), 400
-    return _
+@bp.errorhandler(schemas.ValidationError)
+def handle_invalid_usage(error):
+    response = jsonify(error.messages)
+    response.status_code = 400
+    return response
 
 
 @bp.route("/<string:draw_type>/", methods=["POST"])
-@valid_or_400
 def post(draw_type):
     serializer = _SCHEMAS[draw_type](strict=True)
 
