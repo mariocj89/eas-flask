@@ -28,3 +28,22 @@ def test_validate_ranges(values):
 
     assert any(k in str(err) for k in values)
 
+
+def test_dumping_random_number(app):
+    schema = RandomNumber()
+    rn = factories.SimpleNumber.create(range_min=5, range_max=5)
+    expected = {
+        'range_max': 5,
+        'range_min': 5,
+    }
+    result, errors = schema.dump(rn)
+    assert not errors
+    for k, v in expected.items():
+        assert v == result[k]
+
+    rn.toss()
+    result, errors = schema.dump(rn)
+    assert not errors
+    assert len(result["results"]) == 1
+    assert result["results"][0]["value"] == [5]
+

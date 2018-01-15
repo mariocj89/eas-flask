@@ -53,3 +53,33 @@ def test_dates_have_timezones():
     obj = models.RandomNumber.query.get(rn.id)
     assert obj.created.tzinfo
     assert obj.last_updated.tzinfo
+
+
+def test_generate_result():
+    rn = factories.SimpleNumber.create()
+    res = rn.toss()
+    models.db.session.commit()
+
+    assert res == rn.results[0].value
+    assert 1 == len(rn.results)
+
+    # Check order is kept
+    res2 = rn.toss()
+    models.db.session.commit()
+
+    assert 2 == len(rn.results)
+    assert res2 == rn.results[0].value
+    assert res == rn.results[1].value
+
+    # exercise result repr
+    assert str(res) in repr(rn.results[1])
+
+
+def test_results_are_limited():
+    limit = models.DrawBaseModel._RESULT_LIMIT
+    rn = factories.SimpleNumber.create()
+    for _ in range(limit * 2):
+        rn.toss()
+
+    assert limit == len(rn.results)
+

@@ -9,12 +9,18 @@ def _positive(input_number):
         raise ValidationError("Number has to be positive")
 
 
+class DrawResultSchema(Schema):
+    created = fields.DateTime(dump_only=True)
+    value = fields.Raw(dump_only=True)
+
+
 class DrawBaseSchema(Schema):
     id = fields.Str(dump_only=True)
     private_id = fields.Str(dump_only=True)
-    created = fields.DateTime(dump_only=False)
+    created = fields.DateTime(dump_only=True)
     title = fields.String()
     description = fields.String()
+    results = fields.Nested(DrawResultSchema, many=True)
 
 
 class RandomNumber(DrawBaseSchema):
