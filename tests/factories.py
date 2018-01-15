@@ -1,11 +1,11 @@
+from functools import partial
+
 import factory as fb
 
 from eas import models
 
 
-class _WithTitleAndDesc:
-    title = "Example title"
-    description = "Not so long description"
+Faker = partial(fb.Faker, locale="es_ES")
 
 
 class BaseFactory(fb.alchemy.SQLAlchemyModelFactory):
@@ -18,6 +18,11 @@ class BaseFactory(fb.alchemy.SQLAlchemyModelFactory):
         return fb.build(dict, FACTORY_CLASS=cls, **kwargs)
 
 
+class ComplexDraw(BaseFactory):
+    title = Faker("sentence")
+    description = Faker("text")
+
+
 class SimpleNumber(BaseFactory):
     class Meta:
         model = models.RandomNumber
@@ -26,6 +31,7 @@ class SimpleNumber(BaseFactory):
     range_max = 10
 
 
-class PublicNumber(_WithTitleAndDesc, SimpleNumber):
-    pass
+class PublicNumber(ComplexDraw):
+    range_min = 5
+    range_max = 22
 

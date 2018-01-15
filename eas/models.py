@@ -29,9 +29,22 @@ class DrawBaseModel(db.Model):
         return "<%s %r>" % (self.__class__.__name__, self.id)
 
 
+class ResultBase(db.Model):
+    __abstract__ = True
+    # TODO: add draw that generated it
+
+    created = Column(TIMESTAMP(timezone=True), unique=True, nullable=False, index=True)
+
+    def __repr__(self):
+        #TODO: find better repr. maybe draw and date?
+        return "<%s  %r>" % (self.__class__.__name__, self.value)
+
+
 class RandomNumber(DrawBaseModel):
     __tablename__ = 'random_number'
 
     range_min = Column(Integer, nullable=False)
     range_max = Column(Integer, nullable=False)
+
+
 
