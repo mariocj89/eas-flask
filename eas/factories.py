@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from . import urls
 
@@ -5,7 +7,12 @@ from . import urls
 def create_app():
     app = Flask('flaskr')
 
-    app.config.from_pyfile('eas/config.py')
+    if "EAS_SETTINGS" not in os.environ:
+        raise RuntimeError(
+            "Set the configuration file in the environment variable EAS_SETTINGS.\n"
+            "Example: export EAS_SETTINGS=eas/settings/dev.py"
+        )
+    app.config.from_envvar("EAS_SETTINGS")
 
     register_blueprints(app)
     register_cli(app)

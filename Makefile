@@ -6,7 +6,7 @@ venv/bin/activate: requirements.txt
 	touch venv/bin/activate
 
 test: venv
-	venv/bin/python -m pytest tests
+	EAS_SETTINGS="eas/settings/tests.py" venv/bin/python -m pytest tests
 
 coverage:
 	venv/bin/python -m pytest tests --cov=eas --cov-report=term-missing
