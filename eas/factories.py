@@ -18,7 +18,7 @@ def create_app():
     register_cli(app)
     init_db(app)
 
-    if app.config["CREATE_DB"]:
+    if app.config.get("CREATE_DB"):
         create_db(app)
 
     return app
