@@ -18,6 +18,9 @@ def create_app():
     register_cli(app)
     init_db(app)
 
+    if app.config["CREATE_DB"]:
+        create_db(app)
+
     return app
 
 
@@ -39,3 +42,9 @@ def register_cli(app):  # pragma: nocover
 def init_db(app):
     from eas.models import db
     db.init_app(app)
+
+def create_db(app):
+    from eas.models import db
+    with app.app_context():
+        db.create_all()
+
