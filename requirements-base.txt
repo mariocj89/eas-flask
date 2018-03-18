@@ -1,8 +1,5 @@
 attrs==17.4.0
 click==6.7
-coverage==4.4.2
-factory-boy==2.9.2
-Faker==0.8.9
 Flask==0.12.2
 Flask-SQLAlchemy==2.3.2
 itsdangerous==0.24
@@ -11,8 +8,6 @@ MarkupSafe==1.0
 marshmallow==2.15.0
 pluggy==0.6.0
 py==1.5.2
-pytest==3.3.2
-pytest-cov==2.5.1
 python-dateutil==2.6.1
 six==1.11.0
 SQLAlchemy==1.2.0
