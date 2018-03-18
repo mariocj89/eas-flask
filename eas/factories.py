@@ -7,7 +7,7 @@ from . import urls
 def create_app():
     app = Flask('flaskr')
 
-    if "EAS_SETTINGS" not in os.environ:
+    if "EAS_SETTINGS" not in os.environ:   # pragma: no cover
         raise RuntimeError(
             "Set the configuration file in the environment variable EAS_SETTINGS.\n"
             "Example: export EAS_SETTINGS=eas/settings/dev.py"
