@@ -25,7 +25,7 @@ def handle_invalid_usage(error):
 def post(draw_type):
     serializer = _SCHEMAS[draw_type](strict=True)
 
-    obj, _ = serializer.load(request.json)
+    obj, _ = serializer.load(request.get_json(force=True))
     obj.toss()
     models.db.session.add(obj)
     models.db.session.commit()
