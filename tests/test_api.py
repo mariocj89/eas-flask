@@ -1,17 +1,18 @@
 """Tests against the API"""
+from os.path import join
 import pytest
 
 from . import factories
 from eas import urls
 
 
-NUMBER_URL = urls.API_URL + "/random_number/"
+NUMBER_URL = join(urls.API_URL, "random_number")
 
 
 def test_create_draw_check_basic_fields(api):
     rn = factories.PublicNumber.dict()
     create_result = api.post(NUMBER_URL, json=rn).json
-    get_result = api.get(NUMBER_URL + create_result["id"]).json
+    get_result = api.get(join(NUMBER_URL, create_result["id"])).json
 
     for k, v in get_result.items():
         assert create_result[k] == v
@@ -21,7 +22,7 @@ def test_create_draw_check_basic_fields(api):
 def test_private_link_is_returned_only_on_create(api):
     rn = factories.SimpleNumber.dict()
     create_result = api.post(NUMBER_URL, json=rn).json
-    get_result = api.get(NUMBER_URL + create_result["id"]).json
+    get_result = api.get(join(NUMBER_URL, create_result["id"])).json
 
     assert "private_id" in create_result
     assert "private_id" not in get_result
@@ -30,13 +31,13 @@ def test_private_link_is_returned_only_on_create(api):
 def test_private_link_can_be_used_on_get(api):
     rn = factories.PublicNumber.dict()
     create_result = api.post(NUMBER_URL, json=rn).json
-    get_result = api.get(NUMBER_URL + create_result["private_id"]).json
+    get_result = api.get(join(NUMBER_URL, create_result["private_id"])).json
 
     assert get_result["id"] == create_result["id"]
 
 
 def test_retrieve_invalid_item_gives_404(api):
-    get_result = api.get(NUMBER_URL + "clear-fake-id")
+    get_result = api.get(join(NUMBER_URL, "clear-fake-id"))
 
     assert get_result.status_code == 404
 
@@ -55,10 +56,11 @@ def test_create_invalid_number_returns_400(api, values):
     assert any(k in values for k in result.json)
 
 
-def test_create_draw_creates_result(api):
+def test_put_draw_creates_result(api):
     number = factories.PublicNumber.dict(range_min=5, range_max=6)
     create_result = api.post(NUMBER_URL, json=number).json
+    put_result = api.put(join(NUMBER_URL, create_result["private_id"])).json
 
-    assert 1 == len(create_result["results"])
-    assert create_result["results"][0]["value"][0] in range(5, 7)
+    assert 1 == len(put_result["results"])
+    assert put_result["results"][0]["value"][0] in range(5, 7)
 

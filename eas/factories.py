@@ -43,6 +43,7 @@ def init_db(app):
     from eas.models import db
     db.init_app(app)
 
+
 def create_db(app):  # pragma: no cover
     from eas.models import db
     with app.app_context():

@@ -112,6 +112,17 @@ class DrawBaseModel(db.Model):
     def generate_result(self):  # pragma: nocover
         raise NotImplementedError()
 
+    @classmethod
+    def get_draw_or_404(cls, id_):
+        """Retrieves a draw by either public or private id
+
+        If the id matches no draw, a 404 is raised.
+        """
+        obj = cls.query.get(id_)
+        if not obj:  # Not found, try to search via private_id
+            obj = cls.query.filter_by(private_id=id_).first_or_404()
+        return obj
+
     def __repr__(self):
         return "<%s %r>" % (self.__class__.__name__, self.id)
 
