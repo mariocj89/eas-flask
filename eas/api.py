@@ -1,6 +1,6 @@
 from flask import request, Blueprint, jsonify, g
 
-from . import models, schemas
+from . import models, schemas, swagger
 
 bp = Blueprint("api", __name__)
 
@@ -12,6 +12,11 @@ _SCHEMAS = {
 _MODELS = {
     "random_number": models.RandomNumber,
 }
+
+
+@bp.route("/swagger.yaml")
+def serve_swagger_file():
+    return swagger.YAML_DEFINITION, 200, {'Content-Type': 'text'}
 
 
 @bp.errorhandler(schemas.ValidationError)

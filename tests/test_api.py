@@ -9,6 +9,11 @@ from eas import urls
 NUMBER_URL = join(urls.API_URL, "random_number")
 
 
+def test_get_swagger_yaml(api):
+    content = api.get(join(urls.API_URL, "swagger.yaml")).data
+    assert b"random_number" in content
+
+
 def test_create_draw_check_basic_fields(api):
     rn = factories.PublicNumber.dict()
     create_result = api.post(NUMBER_URL, json=rn).json
