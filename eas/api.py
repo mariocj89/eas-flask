@@ -19,6 +19,11 @@ def serve_swagger_file():
     return swagger.YAML_DEFINITION, 200, {'Content-Type': 'text'}
 
 
+@bp.route("/ping")
+def server_ping():
+    return "pong", 200, {'Content-Type': 'text'}
+
+
 @bp.errorhandler(schemas.ValidationError)
 def handle_invalid_usage(error):
     response = jsonify(error.messages)

@@ -14,6 +14,11 @@ def test_get_swagger_yaml(api):
     assert b"random_number" in content
 
 
+def test_health_check(api):
+    content = api.get(join(urls.API_URL, "ping")).data
+    assert b"pong" in content
+
+
 def test_create_draw_check_basic_fields(api):
     rn = factories.PublicNumber.dict()
     create_result = api.post(NUMBER_URL, json=rn).json
