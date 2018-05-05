@@ -9,7 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost"
+host: "localhost:8080"
 basePath: "/api/v1"
 tags:
 - name: "draw"
@@ -22,7 +22,7 @@ paths:
       tags:
       - "draw"
       summary: "Creates a new draw"
-      description: "Createa a new draw of type random_numer"
+      description: "Creates a new draw of type random_numer"
       operationId: "create_random_number"
       consumes:
       - "application/json"
@@ -34,14 +34,18 @@ paths:
         description: "Draw object to create"
         required: true
         schema:
-          $ref: "#/definitions/random_number"
+          $ref: "#/definitions/RandomNumber"
       responses:
         405:
           description: "Invalid input"
+        200:
+          description: "Result draw"
+          schema:
+            $ref: "#/definitions/RandomNumber"
   /random_number/{id_}:
     get:
       tags:
-      - "pet"
+      - "draw"
       summary: "Find draw by private or public id"
       description: "Returns a single draw"
       operationId: "get_random_number"
@@ -57,14 +61,14 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/random_number"
+            $ref: "#/definitions/RandomNumber"
         400:
           description: "Invalid ID supplied"
         404:
-          description: "Pet not found"
+          description: "Draw not found"
     put:
       tags:
-      - "pet"
+      - "draw"
       summary: "Generates a result for an existing Draw"
       description: ""
       operationId: "put_random_number"
@@ -79,6 +83,10 @@ paths:
       produces:
       - "application/json"
       responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/RandomNumber"
         400:
           description: "Invalid ID supplied"
         404:
@@ -86,35 +94,36 @@ paths:
         405:
           description: "Validation exception"
 definitions:
-  random_number:
-    type: "object"
-    properties:
-      range_min:
-        type: "integer"
-      range_max:
-        type: "integer"
-      id:
-        type: "string"
-      private_id:
-        type: "string"
-      created:
-        type: "string"
-      last_updated:
-        type: "string"
-      title:
-        type: "string"
-      description:
-        type: "string"
-      tags:
-        type: "array"
-        items:
-          $ref: "#/definitions/random_number_result"
-  random_number_result:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      created:
-        type: "string"
-      value:
-        type: "object"
+    RandomNumber:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        private_id:
+          type: "string"
+        created:
+          type: "string"
+        last_updated:
+          type: "string"
+        title:
+          type: "string"
+        description:
+          type: "string"
+        range_min:
+          type: "integer"
+        range_max:
+          type: "integer"
+        results:
+          type: "array"
+          items:
+            $ref: "#/definitions/RandomNumberResult"
+    RandomNumberResult:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        created:
+          type: "string"
+        value:
+          type: "object"
+
