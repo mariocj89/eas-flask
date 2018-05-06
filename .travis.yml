@@ -7,5 +7,6 @@ install:
     - "pip install coveralls pytest-cov"
 script:
     - "EAS_SETTINGS='eas/settings/tests.py' python -m pytest tests --cov=eas"
+    - "python -m pylint eas"
 after_success:
     - coveralls
