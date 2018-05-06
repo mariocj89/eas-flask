@@ -106,17 +106,20 @@ class DrawBaseModel(db.Model):
             DrawResult,
             primaryjoin=lambda: foreign(DrawResult.draw_id) == self.id,
             order_by=DrawResult.created.desc,
+            cascade="all, delete, delete-orphan",
         )
 
     def toss(self):
         """Generates and saves a result"""
         result = self.generate_result()
         assert self.id, "Cannot toss on a non persisted draw"
-        self.results.append(DrawResult(
+        self.results.insert(0, DrawResult(  # pylint: disable=no-member
             draw_id=self.id,
             value=result,
         ))
-        self.results = self.results[:self._RESULT_LIMIT]
+        if len(self.results) > self._RESULT_LIMIT:
+            # sqlalchemy will delete per 'delete-orphan'
+            self.results.pop()  # pylint: disable=no-member
         return result
 
     def generate_result(self):  # pragma: nocover

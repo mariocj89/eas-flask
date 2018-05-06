@@ -75,6 +75,28 @@ def test_generate_result():
     assert str(res) in repr(rn.results[1])
 
 
+def test_result_limit():
+    rn = factories.SimpleNumber.create(range_max=9999999)
+    for _ in range(models.RandomNumber._RESULT_LIMIT):
+        rn.toss()
+
+    # Generating an extra toss doesnt increase the count
+    first, *_, last = rn.results
+    rn.toss()
+
+    assert models.RandomNumber._RESULT_LIMIT == len(rn.results)
+    assert last not in rn.results
+    assert first == rn.results[1]
+
+    # Neither in the one retrieved from db
+    models.db.session.commit()
+    retrieved_draw = models.RandomNumber.get_draw_or_404(rn.id)
+
+    assert models.RandomNumber._RESULT_LIMIT == len(retrieved_draw.results)
+    assert last not in rn.results
+    assert first == rn.results[1]
+
+
 def test_results_are_limited():
     limit = models.DrawBaseModel._RESULT_LIMIT
     rn = factories.SimpleNumber.create()
