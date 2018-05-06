@@ -7,7 +7,7 @@ venv/bin/activate: requirements-base.txt
 
 test: venv
 	venv/bin/pip install -r requirements-test.txt
-	EAS_SETTINGS="eas/settings/tests.py" venv/bin/python -m pytest tests
+	EAS_SETTINGS="eas/settings/tests.py" venv/bin/python -m pytest tests -vvvv
 
 coverage: venv
 	venv/bin/pip install -r requirements-test.txt
