@@ -74,3 +74,19 @@ def test_put_draw_creates_result(api):
     assert 1 == len(put_result["results"])
     assert put_result["results"][0]["value"][0] in range(5, 7)
 
+
+def test_multiple_toss(api):
+    number = factories.PublicNumber.dict(range_min=0, range_max=5000000000)
+    create_result = api.post(NUMBER_URL, json=number).json
+    put_result1 = api.put(join(NUMBER_URL, create_result["private_id"])).json
+    put_result2 = api.put(join(NUMBER_URL, create_result["private_id"])).json
+    get_result = api.get(join(NUMBER_URL, create_result["private_id"])).json
+
+    # Two results were generated
+    assert 2 == len(get_result["results"])
+
+    # Retrieve matches toss
+    assert get_result == put_result2
+
+    # Check order, first result should be second on retrieve
+    assert get_result["results"][1] == put_result1["results"][0]
