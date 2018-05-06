@@ -19,3 +19,6 @@ dev:
 
 run: venv
 	venv/bin/python ./run.py
+
+lint: venv
+	venv/bin/python -m pylint eas

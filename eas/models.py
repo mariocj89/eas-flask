@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-class AwareTimestamp(TypeDecorator):
+class AwareTimestamp(TypeDecorator):  # pylint: disable=abstract-method
     """A timestamp that always have a tz
 
     As many databases just store on UTC and strip out tzinfo
@@ -27,7 +27,7 @@ class AwareTimestamp(TypeDecorator):
         return value
 
 
-class JSONText(TypeDecorator):
+class JSONText(TypeDecorator):  # pylint: disable=abstract-method
     """Stores and retrieves JSON as UnicodeText.
 
     Used as sqlite does not support JSON.
@@ -52,6 +52,11 @@ JSON = _JSON().with_variant(JSONText, 'sqlite')
 
 
 class DrawResult(db.Model):
+    """Model that represents the result of a draw
+
+    Note the value stores in a raw json the result. The actual schema of the
+    value depends on the draw.
+    """
     __tablename__ = 'draw_result'
 
     def __init__(self, **kwargs):
@@ -91,11 +96,16 @@ class DrawBaseModel(db.Model):
     description = Column(UnicodeText, nullable=True)
 
     @declared_attr
-    def results(cls):
+    def results(self):
+        """List of results of a given draw
+
+        As draws are defined as subtypes this helps the mapping and return
+        them in time order (desc)
+        """
         return relationship(
             DrawResult,
-            primaryjoin=lambda: foreign(DrawResult.draw_id) == cls.id,
-            order_by=lambda: DrawResult.created.desc(),
+            primaryjoin=lambda: foreign(DrawResult.draw_id) == self.id,
+            order_by=DrawResult.created.desc,
         )
 
     def toss(self):
@@ -110,6 +120,13 @@ class DrawBaseModel(db.Model):
         return result
 
     def generate_result(self):  # pragma: nocover
+        """To be implemented per draw
+
+        Generates a value to be inserted in the draw as a result
+        generated a specific time.
+
+        The value needs to be JSON serializable.
+        """
         raise NotImplementedError()
 
     @classmethod
@@ -128,6 +145,10 @@ class DrawBaseModel(db.Model):
 
 
 class RandomNumber(DrawBaseModel):
+    """Random number draw
+
+    Given a range, generates a random number
+    """
     __tablename__ = 'random_number'
 
     range_min = Column(Integer, nullable=False)
@@ -137,5 +158,3 @@ class RandomNumber(DrawBaseModel):
         random_value = random.randint(self.range_min, self.range_max)
         result = [random_value]
         return result
-
-

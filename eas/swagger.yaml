@@ -120,8 +120,6 @@ definitions:
     RandomNumberResult:
       type: "object"
       properties:
-        id:
-          type: "string"
         created:
           type: "string"
         value:

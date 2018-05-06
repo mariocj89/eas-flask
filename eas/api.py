@@ -1,4 +1,5 @@
-from flask import request, Blueprint, jsonify, g
+"""Defintion of the endpoints for EAS api"""
+from flask import request, Blueprint, jsonify
 
 from . import models, schemas, swagger
 
@@ -16,16 +17,19 @@ _MODELS = {
 
 @bp.route("/swagger.yaml")
 def serve_swagger_file():
+    """Serves the swagger yaml definition"""
     return swagger.YAML_DEFINITION, 200, {'Content-Type': 'text'}
 
 
 @bp.route("/ping")
 def server_ping():
+    """Heath check endpoint"""
     return "pong", 200, {'Content-Type': 'text'}
 
 
 @bp.errorhandler(schemas.ValidationError)
 def handle_invalid_usage(error):
+    """Transforms ValidationErrors into 400 HTTP responses"""
     response = jsonify(error.messages)
     response.status_code = 400
     return response
@@ -33,6 +37,7 @@ def handle_invalid_usage(error):
 
 @bp.route("/<string:draw_type>", methods=["POST"])
 def post(draw_type):
+    """Draw creation"""
     serializer = _SCHEMAS[draw_type](strict=True)
 
     obj, _ = serializer.load(request.get_json(force=True))
@@ -46,6 +51,7 @@ def post(draw_type):
 
 @bp.route("/<string:draw_type>/<string:id_>", methods=["PUT"])
 def put(draw_type, id_):
+    """Toss of a draw"""
     serializer = _SCHEMAS[draw_type](exclude=["private_id"])
     model_class = _MODELS[draw_type]
 
@@ -60,10 +66,10 @@ def put(draw_type, id_):
 
 @bp.route("/<string:draw_type>/<string:id_>", methods=["GET"])
 def get(draw_type, id_):
+    """Retrieves a draw via its public/private id"""
     serializer = _SCHEMAS[draw_type](exclude=["private_id"])
     model_class = _MODELS[draw_type]
 
     obj = model_class.get_draw_or_404(id_)
     output_data, _ = serializer.dump(obj)
     return jsonify(output_data)
-

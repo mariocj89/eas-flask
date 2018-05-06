@@ -1,3 +1,4 @@
+"""Settings for the dev environment"""
 SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
