@@ -5,3 +5,5 @@ DEBUG = True
 
 # Creates the db at startup
 CREATE_DB = True
+
+ENABLE_SENTRY = True

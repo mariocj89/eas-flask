@@ -1,2 +1,3 @@
 -rrequirements-base.txt
 gunicorn
+raven[flask]

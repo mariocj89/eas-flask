@@ -17,6 +17,7 @@ def create_app():
     register_blueprints(app)
     register_cli(app)
     init_db(app)
+    setup_sentry(app)
 
     if app.config.get("CREATE_DB"):  # pragma: no cover
         create_db(app)
@@ -49,3 +50,9 @@ def create_db(app):  # pragma: no cover
     with app.app_context():
         db.create_all()
 
+def setup_sentry(app):  # pragma: no cover
+    if app.config.get("ENABLE_SENTRY"):
+        if "SENTRY_DSN" not in os.environ:
+            raise RuntimeError("Please set SENTRY_DSN")
+        from raven.contrib.flask import Sentry
+        sentry = Sentry(app)
