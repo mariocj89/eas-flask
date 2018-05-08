@@ -13,3 +13,4 @@ six==1.11.0
 SQLAlchemy==1.2.0
 text-unidecode==1.1
 Werkzeug==0.14.1
+raven[flask]==6.7.0
