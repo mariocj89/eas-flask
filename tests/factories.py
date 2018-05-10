@@ -32,6 +32,9 @@ class SimpleNumber(BaseFactory):
 
 
 class PublicNumber(ComplexDraw):
+    class Meta:
+        model = models.RandomNumber
+
     range_min = 5
     range_max = 22
 
