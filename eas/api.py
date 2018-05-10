@@ -36,7 +36,7 @@ def handle_invalid_usage(error):
 
 
 @bp.route("/<string:draw_type>", methods=["POST"])
-def post(draw_type):
+def create_draw(draw_type):
     """Draw creation"""
     serializer = _SCHEMAS[draw_type](strict=True)
 
@@ -50,7 +50,7 @@ def post(draw_type):
 
 
 @bp.route("/<string:draw_type>/<string:id_>", methods=["PUT"])
-def put(draw_type, id_):
+def toss_draw(draw_type, id_):
     """Toss of a draw"""
     serializer = _SCHEMAS[draw_type](exclude=["private_id"])
     model_class = _MODELS[draw_type]
@@ -65,7 +65,7 @@ def put(draw_type, id_):
 
 
 @bp.route("/<string:draw_type>/<string:id_>", methods=["GET"])
-def get(draw_type, id_):
+def retrieve_draw_by_id(draw_type, id_):
     """Retrieves a draw via its public/private id"""
     serializer = _SCHEMAS[draw_type](exclude=["private_id"])
     model_class = _MODELS[draw_type]
