@@ -51,7 +51,26 @@ class JSONText(TypeDecorator):  # pylint: disable=abstract-method
 JSON = _JSON().with_variant(JSONText, 'sqlite')
 
 
-class DrawResult(db.Model):
+class BaseModel(db.Model):
+    """The base model for all tables, provides a PK and basic metadata"""
+    __abstract__ = True
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = uuid.uuid4().hex
+        self.created = dt.datetime.now(dt.timezone.utc)
+        self.last_updated = self.created
+
+    id = Column(String(32), primary_key=True)
+    created = Column(AwareTimestamp(timezone=True), nullable=False, index=True)
+    last_updated = Column(AwareTimestamp(timezone=True), nullable=False,
+                          onupdate=lambda: dt.datetime.now(dt.timezone.utc))
+
+    def __repr__(self):  # pragma: nocover
+        return "<%s  %r>" % (self.__class__.__name__, self.id)
+
+
+class DrawResult(BaseModel):
     """Model that represents the result of a draw
 
     Note the value stores in a raw json the result. The actual schema of the
@@ -59,14 +78,6 @@ class DrawResult(db.Model):
     """
     __tablename__ = 'draw_result'
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = uuid.uuid4().hex
-        self.created = dt.datetime.now(dt.timezone.utc)
-
-    id = Column(String(32), primary_key=True)
-    created = Column(AwareTimestamp(timezone=True), unique=True, nullable=False,
-                     index=True)
     draw_id = Column(String(32), index=True)
     value = Column(JSON)
 
@@ -74,7 +85,7 @@ class DrawResult(db.Model):
         return "<%s  %r>" % (self.__class__.__name__, self.value)
 
 
-class DrawBaseModel(db.Model):
+class DrawBaseModel(BaseModel):
     """The basic attributes and functionality for a draw"""
     __abstract__ = True
 
@@ -82,16 +93,10 @@ class DrawBaseModel(db.Model):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.id = uuid.uuid4().hex
         self.private_id = uuid.uuid4().hex
-        self.created = dt.datetime.now(dt.timezone.utc)
-        self.last_updated = self.created
 
     id = Column(String(32), primary_key=True)
     private_id = Column(String(32), index=True)
-    created = Column(AwareTimestamp(timezone=True), index=True)
-    last_updated = Column(AwareTimestamp(timezone=True), nullable=False,
-                          onupdate=lambda: dt.datetime.now(dt.timezone.utc))
     title = Column(Unicode, nullable=True)
     description = Column(UnicodeText, nullable=True)
 
