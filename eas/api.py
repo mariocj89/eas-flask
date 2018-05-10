@@ -52,7 +52,6 @@ def create_draw(draw_type):
 @bp.route("/<string:draw_type>/<string:id_>", methods=["PUT"])
 def toss_draw(draw_type, id_):
     """Toss of a draw"""
-    serializer = _SCHEMAS[draw_type](exclude=["private_id"])
     model_class = _MODELS[draw_type]
 
     obj = model_class.get_draw_or_404(id_)
@@ -60,8 +59,7 @@ def toss_draw(draw_type, id_):
     models.db.session.add(obj)
     models.db.session.commit()
 
-    output_data, _ = serializer.dump(obj)
-    return jsonify(output_data)
+    return retrieve_draw_by_id(draw_type, id_)
 
 
 @bp.route("/<string:draw_type>/<string:id_>", methods=["GET"])
