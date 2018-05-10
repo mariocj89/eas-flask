@@ -54,7 +54,7 @@ def toss_draw(draw_type, id_):
     """Toss of a draw"""
     model_class = _MODELS[draw_type]
 
-    obj = model_class.get_draw_or_404(id_)
+    obj = model_class.query.filter_by(private_id=id_).first_or_404()
     obj.toss()
     models.db.session.add(obj)
     models.db.session.commit()

@@ -66,6 +66,13 @@ def test_create_invalid_number_returns_400(api, values):
     assert any(k in values for k in result.json)
 
 
+def test_put_draw_via_public_id_not_found(api):
+    number = factories.PublicNumber.dict(range_min=5, range_max=6)
+    create_result = api.post(NUMBER_URL, json=number).json
+    put_result = api.put(join(NUMBER_URL, create_result["id"]))
+    assert put_result.status_code == 404
+
+
 def test_put_draw_creates_result(api):
     number = factories.PublicNumber.dict(range_min=5, range_max=6)
     create_result = api.post(NUMBER_URL, json=number).json
