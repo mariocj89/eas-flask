@@ -6,7 +6,7 @@ install:
     - "pip install -r requirements-test.txt"
     - "pip install coveralls pytest-cov"
 script:
-    - "EAS_SETTINGS='eas/settings/tests.py' python -m pytest tests --cov=eas"
-    - "python -m pylint eas"
+    - make test
+    - make lint
 after_success:
     - coveralls
