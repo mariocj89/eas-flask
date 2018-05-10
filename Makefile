@@ -22,3 +22,4 @@ run: venv
 
 lint: venv
 	venv/bin/python -m pylint eas
+	venv/bin/python -m pylint tests -E
