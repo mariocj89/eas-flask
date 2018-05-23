@@ -38,7 +38,7 @@ def test_private_link_is_returned_only_on_create(api):
     assert "private_id" not in get_result
 
 
-def test_private_link_can_be_used_on_get(api):
+def test_private_link_can_be_used_on_retrieve(api):
     rn = factories.PublicNumber.dict()
     create_result = api.post(NUMBER_URL, json=rn).json
     get_result = api.get(join(NUMBER_URL, create_result["private_id"])).json
@@ -66,14 +66,14 @@ def test_create_invalid_number_returns_400(api, values):
     assert any(k in values for k in result.json)
 
 
-def test_put_draw_via_public_id_not_found(api):
+def test_toss_draw_with_public_id_not_found(api):
     number = factories.PublicNumber.dict(range_min=5, range_max=6)
     create_result = api.post(NUMBER_URL, json=number).json
     put_result = api.put(join(NUMBER_URL, create_result["id"]))
     assert put_result.status_code == 404
 
 
-def test_put_draw_creates_result(api):
+def test_toss_draw_creates_result(api):
     number = factories.PublicNumber.dict(range_min=5, range_max=6)
     create_result = api.post(NUMBER_URL, json=number).json
     put_result = api.put(join(NUMBER_URL, create_result["private_id"])).json
