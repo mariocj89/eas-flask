@@ -2,7 +2,7 @@
 from os.path import join
 import pytest
 
-from . import factories
+from .. import factories
 from eas import urls
 
 
@@ -50,20 +50,6 @@ def test_retrieve_invalid_item_gives_404(api):
     get_result = api.get(join(NUMBER_URL, "clear-fake-id"))
 
     assert get_result.status_code == 404
-
-
-@pytest.mark.parametrize("values", [
-    dict(range_min=-1),
-    dict(range_max=-1),
-    dict(range_min=15, range_max=10),
-])
-def test_create_invalid_number_returns_400(api, values):
-    number = factories.PublicNumber.dict()
-    number.update(values)
-    result = api.post(NUMBER_URL, json=number)
-
-    assert result.status_code == 400
-    assert any(k in values for k in result.json)
 
 
 def test_toss_draw_with_public_id_not_found(api):

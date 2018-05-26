@@ -1,13 +1,6 @@
-import pytest
-from . import factories
+from .. import factories
 
 from eas import models
-
-
-@pytest.fixture(autouse=True)
-def clean_db(app):
-    """Ensure the db is created and in a clean state"""
-    yield app
 
 
 def test_create_with_defaults():
@@ -23,7 +16,7 @@ def test_create_with_fields():
     assert rn.title == "sample_title"
 
 
-def test_random_number_create_unique_id():
+def test_id_is_unique_per_draw():
     ids = [r.id for r in (factories.SimpleNumber.create() for _ in range(50))]
     assert len(models.RandomNumber.query.all()) == 50
     assert len(ids) == len(set(ids))

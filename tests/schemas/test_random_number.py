@@ -1,5 +1,5 @@
 import pytest
-from . import factories
+from .. import factories
 
 from eas.schemas import RandomNumber, ValidationError
 
