@@ -38,3 +38,12 @@ class PublicNumber(ComplexDraw):
     range_min = 5
     range_max = 22
 
+
+class FacebookRaffle(ComplexDraw):
+    class Meta:
+        model = models.FacebookRaffle
+
+    facebook_object_id = "87e97ew98r798ew7r98ew78"
+    prices = fb.List(
+        Faker("sentence") for _ in range(3)
+    )

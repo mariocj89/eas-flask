@@ -43,3 +43,21 @@ class RandomNumber(DrawBaseSchema):
                 ["range_min"]
             )
         return models.RandomNumber(**data)
+
+
+class FacebookRaffle(DrawBaseSchema):
+    """Schema for a FacebookRaffle Draw"""
+    facebook_object_id = fields.Str(required=True)
+    prices = fields.List(fields.String(), required=True)
+
+    @post_load
+    def _make(self, data):  # pylint: disable=no-self-use
+        prices = data.pop("prices")
+        if not len(prices):
+            raise ValidationError(
+                "Raffles should have a least one price",
+                ["prices"]
+            )
+        raffle = models.FacebookRaffle(**data)
+        map(raffle.add_price, prices)
+        return raffle

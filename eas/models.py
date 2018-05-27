@@ -4,7 +4,7 @@ import datetime as dt
 import json
 import random
 
-from sqlalchemy import Column
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, foreign
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.types import Integer, String, TIMESTAMP, Unicode, UnicodeText
@@ -12,6 +12,9 @@ from sqlalchemy.types import TypeDecorator, JSON as _JSON
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
+
+DRAW_ID_TYPE = String(32)
 
 
 class AwareTimestamp(TypeDecorator):  # pylint: disable=abstract-method
@@ -61,7 +64,7 @@ class BaseModel(db.Model):
         self.created = dt.datetime.now(dt.timezone.utc)
         self.last_updated = self.created
 
-    id = Column(String(32), primary_key=True)
+    id = Column(DRAW_ID_TYPE, primary_key=True)
     created = Column(AwareTimestamp(timezone=True), nullable=False, index=True)
     last_updated = Column(AwareTimestamp(timezone=True), nullable=False,
                           onupdate=lambda: dt.datetime.now(dt.timezone.utc))
@@ -78,7 +81,7 @@ class DrawResult(BaseModel):
     """
     __tablename__ = 'draw_result'
 
-    draw_id = Column(String(32), index=True)
+    draw_id = Column(DRAW_ID_TYPE, index=True)
     value = Column(JSON)
 
     def __repr__(self):
@@ -166,3 +169,50 @@ class RandomNumber(DrawBaseModel):
         random_value = random.randint(self.range_min, self.range_max)
         result = [random_value]
         return result
+
+
+class FacebookRafflePrice(BaseModel):
+    """A price for a Facebook raffle"""
+
+    value = Column(String(200), nullable=False)
+    raffle_id = Column(DRAW_ID_TYPE, ForeignKey('facebook_raffle.id'))
+
+
+class FacebookRaffle(DrawBaseModel):
+    """Raffle based on an object in github
+
+    Allows to distribute prices based on the likes/shares of a facebook item.
+    """
+    __tablename__ = 'facebook_raffle'
+
+    facebook_object_id = Column(String(200), nullable=False)
+    _prices = relationship("FacebookRafflePrice",
+                           cascade="all,delete,delete-orphan")
+
+    def __init__(self, *, prices=None, **kwargs):
+        super().__init__(**kwargs)
+        self.prices = prices or []
+
+    @property
+    def prices(self):
+        return tuple(
+            p.value for p in self._prices
+        )
+
+    @prices.setter
+    def prices(self, values):
+        del self._prices[:]
+        for p in values:
+            self.add_price(p)
+
+    def add_price(self, price):
+        self._prices.append(FacebookRafflePrice(value=price))
+
+    def _pick_winner(self):
+        return "Jorge"
+
+    def generate_result(self):
+        return [
+            (price, self._pick_winner())
+            for price in self.prices
+        ]

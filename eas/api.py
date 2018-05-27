@@ -8,10 +8,12 @@ bp = Blueprint("api", __name__)
 
 _SCHEMAS = {
     "random_number": schemas.RandomNumber,
+    "facebook_raffle": schemas.FacebookRaffle,
 }
 
 _MODELS = {
     "random_number": models.RandomNumber,
+    "facebook_raffle": models.FacebookRaffle,
 }
 
 
