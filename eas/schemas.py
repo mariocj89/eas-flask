@@ -48,6 +48,7 @@ class RandomNumber(DrawBaseSchema):
 class FacebookRaffle(DrawBaseSchema):
     """Schema for a FacebookRaffle Draw"""
     facebook_object_id = fields.Str(required=True)
+    facebook_token = fields.Str(required=True, load_only=True)
     prices = fields.List(fields.String(), required=True)
 
     @post_load

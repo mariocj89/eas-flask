@@ -182,10 +182,16 @@ class FacebookRaffle(DrawBaseModel):
     """Raffle based on an object in github
 
     Allows to distribute prices based on the likes/shares of a facebook item.
+
+    The facebook object id stores the id of the object in GraphQL that should
+    be used to get the likes for the draw whilst the facebook token allows
+    to retrieve it. The token needs to have access to retrieve such information
+    from facebook.
     """
     __tablename__ = 'facebook_raffle'
 
     facebook_object_id = Column(String(200), nullable=False)
+    facebook_token = Column(String(200), nullable=False)
     _prices = relationship("FacebookRafflePrice",
                            cascade="all,delete,delete-orphan")
 

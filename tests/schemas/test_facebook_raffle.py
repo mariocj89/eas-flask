@@ -11,12 +11,14 @@ def test_create_successfully():
 
     assert not err
     assert res is not None
+    assert hasattr(res, "facebook_token")
 
 
 @pytest.mark.parametrize("values", [
-    dict(prices=None, facebook_object_id="anything"),
-    dict(prices=[], facebook_object_id="anything"),
-    dict(prices=["a", "b"], facebook_object_id=None),
+    dict(prices=None, facebook_object_id="anything", facebook_token="fdjkgh3"),
+    dict(prices=[], facebook_object_id="anything", facebook_token="fdjkgh3"),
+    dict(prices=["a", "b"], facebook_object_id=None, facebook_token="123aa"),
+    dict(prices=["a", "b"], facebook_object_id="hey", facebook_token=None),
 ])
 def test_invalid_inputs(values):
     schema = FacebookRaffle(strict=True)

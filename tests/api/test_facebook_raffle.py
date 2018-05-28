@@ -10,7 +10,7 @@ TARGET_URL = join(urls.API_URL, "facebook_raffle")
 
 
 @pytest.mark.parametrize("values", [
-    dict(facebook_object_id=None, prices=["a", "b"]),
+    dict(facebook_object_id=None, prices=["a", "b"], facebook_token="abc"),
 ])
 def test_create_invalid_returns_400(api, values):
     number = factories.FacebookRaffle.dict()

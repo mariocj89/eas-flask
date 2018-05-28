@@ -44,6 +44,7 @@ class FacebookRaffle(ComplexDraw):
         model = models.FacebookRaffle
 
     facebook_object_id = "87e97ew98r798ew7r98ew78"
+    facebook_token = "etui234278wru"
     prices = fb.List(
         Faker("sentence") for _ in range(3)
     )
