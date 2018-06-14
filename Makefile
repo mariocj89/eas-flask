@@ -17,7 +17,7 @@ dev:
 	venv/bin/pip install -r requirements-dev.txt
 	EAS_SETTINGS="eas/settings/dev.py" venv/bin/gunicorn eas.wsgi:app --log-file -
 
-run: venv
+start: venv
 	venv/bin/python ./run.py
 
 lint: venv
