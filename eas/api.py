@@ -90,6 +90,15 @@ class FacebookRaffle(BaseDrawView):
     SERIALIZER = schemas.FacebookRaffle
     MODEL_CLASS = models.FacebookRaffle
 
+    def post(self):
+        params = request.get_json(force=True)
+        token = params.get("facebook_token")
+        if token:
+            # params["facebook_token"] = fb.transform_to_non_expiring_token(token)
+            ...
+        output = self.create_draw(request.get_json(force=True))
+        return jsonify(output)
+
 
 RandomNumber.register_urls(bp)
 FacebookRaffle.register_urls(bp)
